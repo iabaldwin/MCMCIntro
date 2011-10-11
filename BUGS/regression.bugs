@@ -1,0 +1,26 @@
+#----MODEL Definition----------------
+
+model
+{
+	for(i in 1:N) {
+	height[i] ~ dnorm(mu[i],tau)
+	mu[i] <- beta0 + beta1* weight[i]
+}
+beta0 ~ dnorm(0,1.0E-6)
+beta1 ~ dnorm(0,1.0E-6)
+#---------prior 1
+tau ~ dgamma(1.0E-3,1.0E-3)
+sigma2 <- 1.0/tau
+#---------prior 2
+#tau <- 1.0/(sigma*sigma)
+#sigma ~ dunif(0,1000)
+#sigma2 <- sigma*sigma
+}
+
+#----Initial values file----------------------------
+list(beta0 = 0, beta1 = 0, tau = 1)
+#list(beta0 = 0, beta1 = 0, sigma = 1)
+
+#----Data File----------------------------------
+list(N= 10, height=c(169.6,166.8,157.1,181.1,158.4,165.6,166.7,156.5,168.1,165.3),
+weight =c(71.2,58.2,56.0,64.5,53.0,52.4,56.8,49.2,55.6,77.8))
