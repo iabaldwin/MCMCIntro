@@ -1,26 +1,9 @@
-function [samples] = gibbs( model, maxSamples, seed, animate )
+function [samples] = f( model, maxSamples, seed, animate )
 % Simple Gibbs-sampling routine
 
-if ( nargin ~= 4 )
-    disp('Usage:')
-    
-    
-    disp('[samples]     = gibbs( model, maxSamples, seed, animate' )
-    disp('model         - model structure (type whichModel)')
-    disp('maxSamples    - maximum samples')
-    disp('seed          - initial value')
-    disp('animate       - demo')
-    
-    return;
-end
-
-if ( ~isstruct(model) )
-    error('Erroneous Model')
-end
-
-if ( strcmp( model.type, 'gaussian' ) )
-   error('Erroneous type'); 
-end
+assert( nargin==4, sprintf( 'Usage: [[float]]::samples = %s( Model::model, int::maxSamples, float::seed, bool::animate )', mfilename ) )
+assert( isstruct(model), sprintf( '%s() : not a valid model', mfilename ) ) 
+assert( strcmpi( model.type, 'gaussian' ) , sprintf( '%s() : require a 2D gaussian model', mfilename ) )
 
 % Sampler parameters
 samples = [];
@@ -43,10 +26,9 @@ for i=1:maxSamples
         view(45,45)
         
         if ( ~isempty( samples ) )
-            
            plot(samples(end,1), samples(end,2), '.g', 'MarkerSize', 15 ); 
-            
         end
+    
     end
     
     % Condition on x1 given x2
@@ -84,8 +66,6 @@ for i=1:maxSamples
 
     if ( animate )
         plot3( s2,s1, 0, 'sk', 'MarkerSize', 10 );
-        ginput(1);
-        %pause;
     end
     
 end
@@ -121,7 +101,6 @@ function cond = getNumericalApproxConditional( model, a, b)
 end
 
 function s = generateSampleFromNumericalConditional( conditional )
-
     
     cdf(1,1) = conditional(1,2);
     %Build CDF
@@ -130,14 +109,6 @@ function s = generateSampleFromNumericalConditional( conditional )
         cdf(i,1) = cdf(i-1,1) + conditional(i,2);
         
     end
-    
-    
-    % Testing 
-    %disp(cdf)
-    %figure()
-    %hold on
-    %plot( conditional(:,1), conditional(:,2), 'b');
-    %plot( conditional(:,1), cdf(:,1), 'r');
     
     r = rand();
     pos = numel( find( cdf < r ) );

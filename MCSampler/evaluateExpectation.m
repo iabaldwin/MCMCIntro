@@ -1,4 +1,5 @@
-function [eval, mean] = evaluateExpectation( model, interval, range )
+function [e, mean] = evaluateExpectation( model, interval, range )
+
 % Basic Metropolis (symmetric) sampling 
 
 if( ~isstruct( model ) )
@@ -7,7 +8,7 @@ end
 
 % Sampler parameters
 mean = [];
-eval = [];
+e = [];
 
 for x=range(1):interval:range(2)
 
@@ -15,9 +16,9 @@ for x=range(1):interval:range(2)
    
         f = model.density( x, y );
     
-        eval(end+1,:) = [ x y f];
+        e(end+1,:) = [ x y f];
 
-        mean(end+1,:) = [eval(:,1)'*eval(:,3) eval(:,2)'*eval(:,3)];
+        mean(end+1,:) = [e(:,1)'*e(:,3) e(:,2)'*e(:,3)];
         
     end
 end
