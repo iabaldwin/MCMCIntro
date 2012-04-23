@@ -47,7 +47,7 @@ for i=1:maxSamples
     end
     
     
-    % Condition on x1 given x2
+    % Condition on x2 given x1
     d = getNumericalApproxConditional( model, condSample, NaN );
     condSample = generateSampleFromNumericalConditional( [d(:,1) d(:,3)] );
 
